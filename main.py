@@ -3,7 +3,7 @@ import yt_dlp
 link = input("Enter the link: ")
 
 ydl_opts = {
-    'format': 'bestvideo',
+        'format': 'bestvideo+bestaudio',
     'outtmpl': '%(title)s.%(ext)s',
     'quiet': True
 }
