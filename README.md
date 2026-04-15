@@ -1,17 +1,13 @@
-# **YouTube Downloader** #
+# YouTube Downloader
+
+A program that downloads YouTube videos from a provided link. It currently downloads in the best available quality to `.webm`.
 
 ---
 
-## **YouTube Downloader** is a program that downloads yt videos from a provided link. ##
+## Planned Features
 
-# It can download in the best quality to .webm #
-
----
-
-## Planed functionalities ##
-
-- Downloading to diffrent formats
-- Different vide qualities
-- Downloading full playlist
-- Full menu
+- Support for different formats
+- Selection of different video qualities
+- Downloading entire playlists
+- A full user menu
 - Custom download folder path
