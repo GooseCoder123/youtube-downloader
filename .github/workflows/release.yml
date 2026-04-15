@@ -40,10 +40,10 @@ jobs:
             echo "OS_NAME=linux" >> $GITHUB_ENV
           fi
         shell: bash
-e
+
       - name: Build with PyInstaller
         run: pyinstaller --name "yt-downloader-tags-${{ env.VERSION }}-${{ env.OS_NAME }}" --onefile --clean downloader.py
-s
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
