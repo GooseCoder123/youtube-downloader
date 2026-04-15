@@ -1,95 +1,64 @@
-# .github/workflows/release.yml
-
-# Name of the workflow
 name: Create Release
 
-# Controls when the action will run.
-# This workflow runs when a new tag is pushed that starts with 'v' (e.g., v1.0, v1.2.3)
 on:
   push:
     tags:
       - 'v*.*.*'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # The 'build' job
   build:
-    # Job name
     name: Build Executables
-    
-    # This job will run on both windows and ubuntu in parallel
     runs-on: ${{ matrix.os }}
     
-    # A matrix strategy allows you to run the same job with different configurations
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        # You can also specify python versions if needed
-        # python-version: ["3.9", "3.10"] 
 
     steps:
-      # 1. Check out your repository code so the workflow can access it
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Python on the runner
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # Specify your project's python version
+          python-version: '3.14'
 
-      # 3. Install your project's dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
-      # 4. Build the executable with PyInstaller
       - name: Build with PyInstaller
-        run: pyinstaller --name "my-awesome-app" --onefile --clean main.py # Replace main.py with your script
+        run: pyinstaller --name "yt-downloader-tags" --onefile --clean downloader.py
 
-      # 5. Upload the built executable as a workflow artifact.
-      # This allows us to use it in a later job (the 'release' job).
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my-app-${{ matrix.os }} # Unique name for each OS artifact
-          path: dist/* # Path to the executable created by PyInstaller
+          name: yt-downloader-tags-${{ matrix.os }}
+          path: dist/*
 
-  # The 'release' job
   release:
-    # This job's name
     name: Create GitHub Release
     
-    # This job depends on the 'build' job. It will only run if the build job completes successfully.
     needs: build
     
-    # Run on a single runner, ubuntu is a good default
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # This is required to create a release
+      contents: write
 
     steps:
-      # 1. Download all artifacts (the executables from the 'build' job)
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
         with:
-          path: release-assets # Download into a directory named 'release-assets'
+          path: release-assets
 
-      # 2. Create the GitHub Release and upload the assets
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          # This will create a draft release. Set to 'false' to publish automatically.
           draft: false
-          # This will mark the release as a pre-release. Set to 'false' for a full release.
           prerelease: false
-          # The name of the release will be the tag name
           name: Release ${{ github.ref_name }}
-          # The body of the release will be automatically generated from commits
           generate_release_notes: true
-          # The files to upload as release assets. This wildcard will grab all files
-          # from the 'release-assets' directory, which contains our executables.
           files: release-assets/**/*
