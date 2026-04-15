@@ -1,6 +1,6 @@
 # YouTube Downloader
 
-A program that downloads YouTube videos from a provided link. It currently downloads in the best available quality to `.webm`.
+A program that downloads YouTube videos from a provided link. It currently downloads in the best available quality to `.mp4`.
 
 ---
 
