@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: '3.14' 
 
       - name: Install dependencies
         run: |
@@ -29,8 +29,11 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Get version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
       - name: Build with PyInstaller
-        run: pyinstaller --name "yt-downloader-tags" --onefile --clean downloader.py
+        run: pyinstaller --name "yt-downloader-tags-${{ env.VERSION }}" --onefile --clean downloader.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -40,14 +43,10 @@ jobs:
 
   release:
     name: Create GitHub Release
-    
     needs: build
-    
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-
     steps:
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
