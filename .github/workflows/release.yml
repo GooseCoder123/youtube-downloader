@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' 
+          python-version: '3.14' 
 
       - name: Install dependencies
         run: |
@@ -43,12 +43,12 @@ jobs:
         shell: bash
 
       - name: Build with PyInstaller
-        run: pyinstaller --name "yt-downloader-tags-${{ env.VERSION }}-${{ env.OS_NAME }}" --onefile --clean downloader.py
+        run: pyinstaller --name "yt-downloader-${{ env.VERSION }}-${{ env.OS_NAME }}" --onefile --clean downloader.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: yt-downloader-tags-${{ matrix.os }}
+          name: yt-downloader-${{ matrix.os }}
           path: dist/*
 
   release:
